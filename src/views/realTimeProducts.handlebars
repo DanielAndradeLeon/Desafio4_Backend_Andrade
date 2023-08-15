@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Productos en Tiempo Real</title>
+</head>
+<body>
+  <h1>Listado de Productos en Tiempo Real</h1>
+  <ul id="product-list">
+    {{#each products}}
+    <li>
+      <strong>{{title}}</strong><br>
+      {{description}}<br>
+      Precio: {{price}}<br>
+      Código: {{code}}<br>
+      Categoría: {{category}}<br>
+      Stock: {{stock}}<br>
+      <img src="{{thumbnails.[0]}}" alt="{{title}}" width="100">
+    </li>
+    {{/each}}
+  </ul>
+
+  <form id="new-product-form">
+    <h2>Agregar Nuevo Producto</h2>
+    <label for="title">Título: </label>
+    <input type="text" id="title" name="title"><br>
+    <label for="description">Descripción: </label>
+    <input type="text" id="description" name="description"><br>
+    <label for="price">Precio: </label>
+    <input type="number" id="price" name="price"><br>
+    <label for="code">Código: </label>
+    <input type="text" id="code" name="code"><br>
+    <label for="category">Categoría: </label>
+    <input type="text" id="category" name="category"><br>
+    <label for="stock">Stock: </label>
+    <input type="number" id="stock" name="stock"><br>
+    <button type="submit">Agregar Producto</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    // Escuchar el evento 'updateProducts' y actualizar la lista de productos en la vista
+    socket.on('updateProducts', (products) => {
+      const productList = document.getElementById('product-list');
+      productList.innerHTML = '';
+
+      products.forEach((product) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <strong>${product.title}</strong><br>
+          ${product.description}<br>
+          Precio: ${product.price}<br>
+          Código: ${product.code}<br>
+          Categoría: ${product.category}<br>
+          Stock: ${product.stock}<br>
+          <img src="${product.thumbnails[0]}" alt="${product.title}" width="100">
+        `;
+        productList.appendChild(li);
+      });
+    });
+
+    // Enviar un nuevo producto al servidor al enviar el formulario
+    const form = document.getElementById('new-product-form');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+
+      const newProduct = {
+        title: formData.get('title'),
+        description: formData.get('description'),
+        price: parseFloat(formData.get('price')),
+        code: formData.get('code'),
+        category: formData.get('category'),
+        stock: parseInt(formData.get('stock')),
+        thumbnails: []  // Deberías agregar las rutas de las imágenes aquí
+      };
+
+      // Emitir el evento 'newProduct' al servidor con el nuevo producto
+      socket.emit('newProduct', newProduct);
+
+      // Limpiar el formulario
+      form.reset();
+    });
+  </script>
+</body>
+</html>
+

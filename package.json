@@ -1,0 +1,13 @@
+{
+    "name": "product-manager-server",
+    "version": "1.0.0",
+    "description": "Servidor Express para consultar productos.",
+    "main": "app.js",
+    "dependencies": {
+        "express": "^4.18.2",
+        "express-handlebars": "^7.1.2",
+        "fs": "0.0.1-security",
+        "serve-favicon": "^2.5.0",
+        "socket.io": "^4.7.2"
+    }
+}

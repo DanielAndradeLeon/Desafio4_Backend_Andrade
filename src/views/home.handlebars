@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Productos</title>
+</head>
+<body>
+  <h1>Listado de Productos</h1>
+  <ul>
+    {{#each products}}
+    <li>
+      <strong>{{title}}</strong><br>
+      {{description}}<br>
+      Precio: {{price}}<br>
+      Código: {{code}}<br>
+      Categoría: {{category}}<br>
+      Stock: {{stock}}<br>
+      <img src="{{thumbnails.[0]}}" alt="{{title}}" width="100">
+    </li>
+    {{/each}}
+  </ul>
+</body>
+</html>
+
